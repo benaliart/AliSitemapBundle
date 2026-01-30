@@ -2,96 +2,207 @@
 
 ## `ali_sitemap.yaml` Configuration
 
-Create the `ali_sitemap.yaml` file inside `config/packages` folder with `ali_sitemap` configuration key:
+Create the `ali_sitemap.yaml` file inside the `config/packages` directory and define your configuration under the `ali_sitemap` root key.
+
+The sitemap Index (site_index.xml) will list all sitemaps
 
 ## Sitemaps Configuration
 
-`sitemaps` key under ali_sitemap contains an array of sitemap configurations \(e\.g\., blog\), each with its own settings\.
+The `sitemaps` key under `ali_sitemap` contains a list of sitemap definitions (e.g. `pages`, `blog`), each with its own configuration.
 
-## Configuration Exemple
+Each sitemap generates a dedicated XML file, such as:
+- `sitemap-pages.xml`
+- `sitemap-blog.xml`
+
+## Configuration Example
 
 ```yaml
 ali_sitemap:
-    default_priority: 0.7 # default priority for each url entries
-    default_changefreq: "weekly" # default change frequency for each url entries
+    # Default priority applied to all URL entries
+    default_priority: 0.7
+
+    # Default change frequency applied to all URL entries
+    default_changefreq: "weekly"
 
     sitemaps:
 
-        #### First Sitemap example :
-        # it will create a sitemap-pages.xml Sitemap :
-        - slug: "pages" 
-          # For sitemap inside twig template with controller call :
+        #### First sitemap example
+        # This will generate a sitemap-pages.xml file
+        - slug: "pages"
+
+          # Used when rendering the sitemap via Twig / controller
           title: "Pages"
-          # edit the default priority :
-          priority: 0.9 
-          # edit the default changefreq :
-          changefreq: "weekly" 
-          # >>> List of url entries (nodes) :
+
+          # Override the default priority
+          priority: 0.9
+
+          # Override the default change frequency
+          changefreq: "weekly"
+
+          # List of URL entries (nodes)
           nodes:
-              # type of node (url / route / routes) : 
-              - type: "route" 
-                title: "Accueil" 
-                # the route call :
+
+              # Route-based node
+              - type: "route"
+                title: "Home"
+
+                # Symfony route name
                 route: "app_home"
+
+                # Override the priority
                 priority: 1.0
-                 # edit the default changefreq :
+
+                # Override the change frequency
                 changefreq: "daily"
 
               - type: "route"
-                title: "À propos"
+                title: "About"
                 route: "app_about"
-                # edit the default priority :
-                priority: 0.9 
 
-        #### 2nd Sitemap example :
-        # it will create a sitemap-blog.xml Sitemap :
+                # Override the priority
+                priority: 0.9
+
+        #### Second sitemap example
+        # This will generate a sitemap-blog.xml file
         - slug: "blog"
-          # For sitemap inside twig template with controller call : 
-          title: "Blog" 
-          # >>> List of url entries (nodes) :
+
+          # Used when rendering the sitemap via Twig / controller
+          title: "Blog"
+
+          # List of URL entries (nodes)
           nodes:
-              # Type Url : force a relative url :
-              - type: "url" 
-                title: "Hello word"
-                # Relative URL :
-                url: "/hello/world" 
+
+              # URL node (relative URL)
+              - type: "url"
+                title: "Hello world"
+
+                # Relative URL
+                url: "/hello/world"
+
                 priority: 0.7
 
-              # Type Route : url general from route name :
+              # Route-based node
               - type: "route"
-                # For sitemap inside twig template with controller call : 
-                title: "Blog homepage" 
-                # The route name
-                route: "app_article_index" 
-                # edit the default priority :
-                priority: 0.8 
+                title: "Blog homepage"
 
-              # Type Routes : dynamic routes from basic repository results :
+                # Symfony route name
+                route: "app_article_index"
+
+                priority: 0.8
+
+              # Dynamic routes generated from repository results
               - type: "routes"
-                # Entity used for the repository query :
-                entity: 'App\Entity\Article' 
-                # Title method : For sitemap inside twig template with controller call :
-                title_method: "getTitle" 
-                # Route name :
-                route: "app_article_show" 
-                # Route parameter { key : "method" } :
-                route_parameters: { id: "getId" } 
-                # default : findBy (or "mySpecialRequestForSitemapBlog ) :
-                repository_method: "findBy" 
-                # Query array ( ex : ["isActive" => true ]) :
-                query: { isActive: true } 
-                # OrderBy array ( ex : ["publishedAt" => "DESC" ] :
-                orderBy: { publishedAt: "DESC" } 
-                #-- Final Repo Query will be --#
-                #-- findBy(["isActive" => true ], ["publishedAt" => "DESC" ])) --#
-                # Method for last modification date :
-                lastmod_method: "getModifiedAt" 
-                # Force changefreq :
-                changefreq: "weekly" 
-                # Force priority :
-                priority: 0.9 
+
+                # Entity used for the repository query
+                entity: "App\Entity\Article"
+
+                # Method used to retrieve the title
+                title_method: "getTitle"
+
+                # Symfony route name
+                route: "app_article_show"
+
+                # Route parameters mapping { parameter: "entityMethod" }
+                route_parameters: { id: "getId" }
+
+                # Repository method (default: findBy)
+                repository_method: "findBy"
+
+                # Query criteria (e.g. ["isActive" => true])
+                query: { isActive: true }
+
+                # OrderBy clause (e.g. ["publishedAt" => "DESC"])
+                orderBy: { publishedAt: "DESC" }
+
+                # Final repository call:
+                # findBy(["isActive" => true], ["publishedAt" => "DESC"])
+
+                # Method used to retrieve the last modification date
+                lastmod_method: "getModifiedAt"
+
+                # Override the change frequency
+                changefreq: "weekly"
+
+                # Override the priority
+                priority: 0.9
 ```
 
+# Generated Sitemap Output
 
+## sitemap_index.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>https://127.0.0.1:8003/sitemap-pages.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://127.0.0.1:8003/sitemap-blog.xml</loc>
+    </sitemap>
+</sitemapindex>
+```
+
+## sitemap-pages.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <url>
+        <loc>https://127.0.0.1:8003/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>https://127.0.0.1:8003/about</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>
+```
+
+## sitemap-blog.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <url>
+        <loc>https://127.0.0.1:8003/coucou/test</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://127.0.0.1:8003/article</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://127.0.0.1:8003/article/1</loc>
+        <lastmod>2026-01-29</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>https://127.0.0.1:8003/article/2</loc>
+        <lastmod>2026-01-29</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>
+```
 
 
