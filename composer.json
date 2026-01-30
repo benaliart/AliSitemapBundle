@@ -16,17 +16,18 @@
     },
     "scripts": {
         "post-install-cmd": [
-          "echo 'Package installé avec succès !'",
+          "echo 'Package installed successfully !'",
           "php scripts/post-install.php"
         ],
         "post-update-cmd": [
-          "echo 'Package mis à jour avec succès !'"
+          "echo 'Package updated successfully !'"
         ]
       },
     "keywords": [
         "symfony",
         "bundle",
-        "sitemap"
+        "sitemap",
+        "sitemaps"
     ],
     "license": "MIT",
     "authors": [
@@ -36,9 +37,18 @@
         }
     ],
     "require": {
-        "php": ">=7.4.3",
-        "symfony/twig-bundle" : ">=5",
-        "symfony/finder" : ">=5"
+        "php": ">=8.1",
+        "symfony/twig-bundle": ">=5",
+        "symfony/finder": ">=5",
+        "symfony/yaml": ">=5",
+        "symfony/filesystem": ">=5", 
+        "symfony/http-kernel": ">=5", 
+        "symfony/dependency-injection": ">=5",
+        "symfony/config": ">=5", 
+        "doctrine/orm": ">=2.10",
+        "symfony/routing": ">=5", 
+        "symfony/http-foundation": ">=5",
+        "symfony/framework-bundle": ">=5"
     },
     "autoload": {
         "psr-4": {

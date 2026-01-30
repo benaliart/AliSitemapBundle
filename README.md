@@ -1,43 +1,32 @@
-# AliSiteampBundle
-A Symfony Bundle for easy sitemaps
+# AliSitemapBundle
+*A Symfony Bundle for Simple Sitemap Generation*
 
-## Introduction
+### 📌 Introduction
+**AliSitemapBundle** is a lightweight Symfony bundle designed to simplify sitemap generation. It allows you to quickly define and publish sitemaps using a YAML configuration file.
 
-AliSitemap is a simple tool to facilitate the sitempas creation inside symfony projects
-The purpose is to quickly publish sitemaps with simple configurations
+### ✨ Features
+   Feature | Description |
+ |---------|-------------|
+ | **YAML Configuration** | Define sitemaps and nodes directly in the bundle's config file. |
+ | **Dynamic URLs** | Generate URLs dynamically using `Entity`, `Repository`, `Order`, ... |
+ | **Customizable Templates** | Easily override Twig templates for custom output. |
+ | **No Database Needed** | Works without a database—just configure and go. |
 
-You just have the define your list sitemaps and list of nodes inside the yaml bundle
+### 📦 Installation
+Follow the [Installation Guide](docs/20__Install.md).
 
-## Features
+### ⚙️ Configuration
+Configure the bundle by editing the YAML file. See the [Configuration Guide](docs/30__Configuration.md).
 
-- Create as sitemaps as needed by edition the bundle config file
+### 🚀 Roadmap
+- Twig integration: Embed sitemap URLs in Twig templates.
+- Auto-generate and manage `robots.txt`.
+- Extend with custom node types.
+- Cache sitemaps for performance optimization.
 
-- Create url nodes, with url, with route and dynamic routes (by configuring `Entity` and `Repository`, `Order`, ...)
-
-- Easy overwrite templates
-
-- No database requested
-
-## Documentation
-
-- [installation](docs/20__Install.md)
-
-- [Configuration](docs/30__Configuration.md)
-
-## Todo and ideas
-
-- Create a list of Urls that can be embeded in a twig
-
-- Manage a robots.txt file
-
-- Facilitate the possibility of creating new type of nodes (for custom purpose)
-
-- cache sitemap to avoid heavy database calls for large website
-
-
-# Licence
+### 📄 License
 MIT License
+© 2025 AliSitemapBundle
+[View LICENSE](LICENSE)
 
-Copyright (c) 2025 AliSitemapBundle
 
-[see LICENCE file](LICENCE)
