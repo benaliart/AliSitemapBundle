@@ -1,0 +1,58 @@
+{
+    "name": "aliarteo/ali-sitemap-bundle",
+    "version" : "0.1.0",
+    "description": "A Symfony Bundle for easy Sitemaps.",
+    "type": "symfony-bundle",
+    "extra": {
+        "symfony": {
+            "allow-contrib": true,
+            "recipes": [
+                "ali-sitemap-bundle"
+            ]
+        },
+        "symfony-pack": {
+            "version": "0.1"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+          "echo 'Package installé avec succès !'",
+          "php scripts/post-install.php"
+        ],
+        "post-update-cmd": [
+          "echo 'Package mis à jour avec succès !'"
+        ]
+      },
+    "keywords": [
+        "symfony",
+        "bundle",
+        "sitemap"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benoit A.",
+            "email": "contact@aliarteo.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4.3",
+        "symfony/twig-bundle" : ">=5",
+        "symfony/finder" : ">=5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aliarteo\\AliSitemapBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aliarteo\\AliSitemapBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.3"
+        }
+    }
+}

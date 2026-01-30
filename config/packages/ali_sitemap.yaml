@@ -1,0 +1,48 @@
+ali_sitemap:
+    default_priority: 0.7
+    default_changefreq: "weekly"
+
+    sitemaps:
+        - slug: "pages"
+          title: "Pages"
+          changefreq: "weekly"
+          priority: 0.9
+
+          nodes:
+              - type: "route"
+                title: "Accueil"
+                route: "app_home"
+                # route_parameters: { id: "getId" }
+                priority: 1.0
+                changefreq: "daily"
+
+              - type: "route"
+                title: "À propos"
+                route: "app_about"
+                priority: 0.9
+
+        - slug: "blog"
+          title: "Blog"
+
+          nodes:
+              - type: "url"
+                title: "Mon titre"
+                url: "/coucou/test"
+                priority: 0.9
+
+              - type: "route"
+                title: "Accueil du blog"
+                route: "app_article_index"
+                priority: 0.9
+
+              - type: "routes"
+                entity: 'App\Entity\Article'
+                title_method: "getTitle"
+                route: "app_article_show"
+                # route_parameters: { id: "getId" }
+                repository_method: "findBy" # default : findBy
+                query: { isActive: true }
+                orderBy: { publishedAt: "DESC" }
+                lastmod_method: "getModifiedAt"
+                changefreq: "weekly"
+                priority: 0.9

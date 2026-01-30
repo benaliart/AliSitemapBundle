@@ -1,0 +1,7 @@
+ali_sitemap_controller_routes:
+    resource: '@AliSitemapBundle/config/routes.yaml'
+    # prefix: sitemap
+# ali_sitemap:
+#     resource: .
+#     type: ali_sitemap
+#     prefix: sitemap

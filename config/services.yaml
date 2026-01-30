@@ -1,0 +1,46 @@
+# config/services.yaml
+parameters:
+    ali_sitemap.author.email: "contact@aliarteo.com"
+
+services:
+    _defaults:
+        autowire: true # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    Aliarteo\AliSitemapBundle\:
+        resource: "../src/"
+        exclude:
+            # - '../src/DependencyInjection/'
+            # - '../src/Entity/'
+            - "../src/Kernel.php"
+
+    Aliarteo\AliSitemapBundle\Controller\:
+        resource: "../src/Controller/*"
+        # S'assurez-vous que les contrôleurs sont publics
+        public: true 
+
+    #-------------------------------
+    # COMMANDS ---------------------
+    #-------------------------------
+    # Aliarteo\AliSitemapBundle\Command\InstallCommand:
+    #     autowire: true
+    #     tags: ["console.command"]
+
+    #-------------------------------
+    # SERVICES ---------------------
+    #-------------------------------
+    Aliarteo\AliSitemapBundle\Service\SitemapService:
+        arguments:
+            $default_changefreq: '%ali_sitemap.default_changefreq%'
+            $default_priority: '%ali_sitemap.default_priority%'
+            $sitemaps_config: '%ali_sitemap.sitemaps%'
+
+    #-------------------------------
+    # ROUTINNG ---------------------
+    #-------------------------------
+    # Aliarteo\AliSitemapBundle\Routing\AliSitemapRoutingLoader:
+    #     arguments:
+    #         $sitemaps: '%ali_sitemap.sitemaps%'
+    #     tags:
+    #         - { name: 'routing.loader' }         
+

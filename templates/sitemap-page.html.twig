@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+
+{% block block_title %}
+  <h1 class="main-title" {# data-aos="fade-in" #} >Plan du site</h1>
+{% endblock %}
+
+
+{% block layout_content %}
+
+{# {{ dump(tree) }} #}
+{% for sitemap in tree %}
+<h3 class="mb-1">{{ sitemap.title | default }}</h3>
+<ul class="mb-4">
+{% for url in sitemap.nodes %}
+	<li><a class="text-primary" href="{%if url.loc|replace({hostname:''}) == url.loc%}{{hostname}}{{url.loc}}{%else%}{{url.loc}}{%endif%}">{{ url.title | default }}</a></li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+{% endblock %}
+
+
