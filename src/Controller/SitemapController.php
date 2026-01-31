@@ -13,8 +13,39 @@ class SitemapController extends AbstractController
 
     public function __construct(
         private SitemapService $sitemapService,
-
     ) {
+    }
+
+
+    /**
+     * robots.txt
+     * Robots text file with link to sitemap index
+     *
+     * @param  mixed $doc_key
+     * @return Response
+     */
+    #[Route(
+        '/robots.txt',
+        name: 'ali_sitemaps_robots_txt'
+    )]
+    public function robotTxt(Request $request): Response
+    {
+
+        $hostname = $request->getSchemeAndHttpHost();
+        $template = "@AliSitemap/robots_txt.html.twig";
+
+        $sitemap_index_url = $this->sitemapService->getRobotTxt();
+
+        // return response in Txt format
+        $response = new Response(
+            $this->renderView($template, [
+                'sitemap_index_url' => $sitemap_index_url,
+            ]),
+            200
+        );
+        $response->headers->set('Content-Type', 'text/plain');
+        return $response;
+
     }
 
     /**

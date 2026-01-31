@@ -9,11 +9,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SitemapService
 {
 
-
     public function __construct(
         // private DocumentationService $documentationService,
         private EntityManagerInterface $em,
         private UrlGeneratorInterface $router,
+        private string $robots_txt,
         private string $default_changefreq,
         private string $default_priority,
         private array $sitemaps_config
@@ -21,6 +21,14 @@ class SitemapService
     ) {
     }
 
+    public function getRobotTxt(): string
+    {
+
+        $robots_txt = $this->robots_txt;
+        $sitemap_index_url = $this->router->generate("ali_sitemaps_index", [], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $sitemap_index_url;
+
+    }
 
     public function getSitemaps(): array
     {
@@ -73,15 +81,14 @@ class SitemapService
                  * Une url fixe
                  */
                 if ($node['type'] == "url") {
-                    if($node['url'])
+                    if ($node['url'])
                         $p['loc'] = $node['url'];
                 }
-                
+
                 /**
                  * NODE TYPE ROUTE (SINGLE)
                  * Une issue d'une route
-                 */
-                elseif ($node['type'] == "route") {
+                 */ elseif ($node['type'] == "route") {
                     if (null != $this->router->getRouteCollection()->get($node['route'])) {
                         if (isset($node['route_parameters'])) {
                             $route_parameters = $node['route_parameters'];
@@ -99,8 +106,7 @@ class SitemapService
                  * routes => ['priority:String','entity:Class','query:Array', 'orderBy:Array']
                  * Pour chaque routes ( routes est un tableau défini dans la configuration pour chaque sitemap)
                  * On ajoute une liste d'url au sitemap
-                 */
-                elseif ($node['type'] == "routes") {
+                 */ elseif ($node['type'] == "routes") {
 
                     $entity = $query = $orderBy = null;
 
@@ -109,7 +115,7 @@ class SitemapService
 
                         if (isset($node['entity'])) {
                             $entity = $node['entity'];
-                            if (isset($route_config['query']))
+                            if (isset($node['query']))
                                 $query = $node['query'];
                             else
                                 $query = [];
@@ -194,7 +200,7 @@ class SitemapService
 
                 }
 
-                
+
                 // PRIORITY
                 // Si "priority" est défini dans le node
                 if (isset($node['priority'])) {
@@ -226,7 +232,7 @@ class SitemapService
 
                 // Ajouter l'entrée aux nodes du sitemap
                 if (isset($p['loc']) && $node['type'] != 'routes')
-                    $nodes[] = $p ;
+                    $nodes[] = $p;
 
             }
         }

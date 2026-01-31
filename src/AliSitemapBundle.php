@@ -6,6 +6,8 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -32,7 +34,6 @@ class AliSitemapBundle extends AbstractBundle
 
         // BUNDLE DEFAULT CONFIG
         $this->initBundleConfig($filesystem);
-
         // ADD BUNDLE ROUTES
         $this->initBundleRoutes($filesystem);
 
@@ -41,10 +42,15 @@ class AliSitemapBundle extends AbstractBundle
 
 public function configure(DefinitionConfigurator $definition): void
 {
+
+    /** @var NodeDefinition $rootNode */
     $rootNode = $definition->rootNode();
 
     $rootNode
         ->children()
+            ->booleanNode('robots_txt')
+                ->defaultTrue()
+            ->end()
             ->scalarNode('default_changefreq')
                 ->defaultValue('weekly')
                 ->info('Default update frequency for sitemaps.')
@@ -77,9 +83,10 @@ public function configure(DefinitionConfigurator $definition): void
                             ->defaultValue([])
                             ->arrayPrototype()
                                 ->children()
-                                    ->scalarNode('type')
+                                    ->enumNode('type')
+                                        ->values(['url', 'route', 'routes'])
                                         ->isRequired()
-                                        ->info('Type of node: "route", "url", or "routes".')
+                                        ->info('Type of node: "url", "route", or "routes".')
                                     ->end()
                                     ->scalarNode('title')
                                         ->defaultValue('')
@@ -141,15 +148,19 @@ public function configure(DefinitionConfigurator $definition): void
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
 
-        // load an XML, PHP or YAML file
+        // load bundle YAML services file
         $container->import('../config/services.yaml');
 
-        // Exemple : enregistrer chaque documentation comme un service ou un paramètre
+        // Create severals parameters
         $container->parameters()
-        // ->set('ali_sitemap.admin_path', $config['admin_path'])
-        ->set('ali_sitemap.default_priority', $config['default_priority'])
-        ->set('ali_sitemap.default_changefreq', $config['default_changefreq'])
-        ->set('ali_sitemap.sitemaps', $config['sitemaps'])
+            // Generate Robot Txt or not
+            ->set('ali_sitemap.robots_txt', $config['robots_txt'])
+            // Default priority
+            ->set('ali_sitemap.default_priority', $config['default_priority'])
+            // Default changefreq
+            ->set('ali_sitemap.default_changefreq', $config['default_changefreq'])
+            // List of Sitemaps config
+            ->set('ali_sitemap.sitemaps', $config['sitemaps'])
         ;
 
 
@@ -184,14 +195,17 @@ public function configure(DefinitionConfigurator $definition): void
      * initBundleConfig
      * if the config file doesn't exist in the app, copy it from the bundle
      */
-    private function initBundleConfig($filesystem): void
+    private function initBundleConfig(Filesystem $filesystem): void
     {
-        $bundle_config_path = $this->getBundlePath() . (self::CONFIG_YAML_PATH);
-        $app_config_path = $this->getAppPath() . (self::CONFIG_YAML_PATH);
-        if (!$filesystem->exists($app_config_path)) {
-            $config_bundle = Yaml::parseFile($bundle_config_path);
-            $yaml = Yaml::dump($config_bundle);
-            file_put_contents($app_config_path, $yaml);
+        $bundleConfigPath = $this->getBundlePath() . (self::CONFIG_YAML_PATH) . '.sample';
+        $appConfigPath = $this->getAppPath() . (self::CONFIG_YAML_PATH);
+
+        if (!$filesystem->exists($appConfigPath)) {
+            try {
+                $filesystem->copy($bundleConfigPath, $appConfigPath, false);
+            } catch (IOExceptionInterface $exception) {
+                error_log(sprintf('An error occurred while copying the config file: %s', $exception->getMessage()));
+            }
         }
     }
 
@@ -199,15 +213,19 @@ public function configure(DefinitionConfigurator $definition): void
      * initBundleRoutes
      * if the routes file doesn't exist in the app, copy it from the bundle
      */
-    private function initBundleRoutes($filesystem): void
+    private function initBundleRoutes(Filesystem $filesystem): void
     {
-        $bundle_routes_path = $this->getBundlePath() . (self::ROUTES_YAML_PATH);
-        $app_routes_path = $this->getAppPath() . (self::ROUTES_YAML_PATH);
-        if (!$filesystem->exists($app_routes_path)) {
-            $routes_bundle = Yaml::parseFile($bundle_routes_path);
-            $yaml = Yaml::dump($routes_bundle);
-            file_put_contents($app_routes_path, $yaml);
+        $bundleRoutesPath = $this->getBundlePath() . (self::ROUTES_YAML_PATH);
+        $appRoutesPath = $this->getAppPath() . (self::ROUTES_YAML_PATH);
+
+        if (!$filesystem->exists($appRoutesPath)) {
+            try {
+                $filesystem->copy($bundleRoutesPath, $appRoutesPath, false);
+            } catch (IOExceptionInterface $exception) {
+                error_log(sprintf('An error occurred while copying the config file: %s', $exception->getMessage()));
+            }
         }
+
     }
 
 }
