@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:s="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" exclude-result-prefixes="s image">
+
+	<xsl:template match="/">
+		<html>
+			<head>
+				<title>Sitemap</title>
+				<style>
+					{# ul {
+						list-style-type: none;
+					}
+					li {
+						margin: 5px 0;
+					} #}
+				</style>
+
+				<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+            </head>
+				<body>
+
+					<div
+						class="container">
+						<!-- Gestion du sitemap_index.xml -->
+						<xsl:if test="//s:sitemapindex">
+							<h1 class="my-3">Sitemaps Index</h1>
+							<ul class="list-group">
+								<xsl:for-each select="//s:sitemap">
+									<li class="list-group-item">
+										<a href="{s:loc}" target="_blank">
+											<xsl:value-of select="s:loc"/>
+										</a>
+									</li>
+								</xsl:for-each>
+							</ul>
+						</xsl:if>
+
+						<!-- Gestion du sitemap.xml -->
+						<xsl:if test="//s:urlset">
+							<h1 class="my-3">Sitemap</h1>
+							<ul class="list-group">
+								<xsl:for-each select="//s:url">
+									<li class="list-group-item">
+										<b>Url :</b>
+										<a href="{s:loc}" target="_blank">
+											<xsl:value-of select="s:loc"/>
+										</a>
+										<xsl:if test="s:lastmod">
+											<br/>lastmod :
+											<xsl:value-of select="s:lastmod"/>
+										</xsl:if>
+										<xsl:if test="s:changefreq">
+											<br/>changefreq :
+											<xsl:value-of select="s:changefreq"/>
+										</xsl:if>
+										<xsl:if test="s:priority">
+											<br/>priority :
+											<xsl:value-of select="s:priority"/>
+										</xsl:if>
+										<xsl:if test="image:image">
+											<br/>image :
+											<a href="{image:image/image:loc}" target="_blank">
+												<xsl:value-of select="image:image/image:loc"/>
+											</a>
+										</xsl:if>
+									</li>
+								</xsl:for-each>
+							</ul>
+						</xsl:if>
+					</div>
+				</body>
+			</html>
+		</xsl:template>
+	</xsl:stylesheet>

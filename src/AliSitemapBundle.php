@@ -163,7 +163,6 @@ public function configure(DefinitionConfigurator $definition): void
             ->set('ali_sitemap.sitemaps', $config['sitemaps'])
         ;
 
-
     }
 
     private function getAlias(): string

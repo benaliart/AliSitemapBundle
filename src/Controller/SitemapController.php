@@ -18,6 +18,31 @@ class SitemapController extends AbstractController
 
 
     /**
+     * sitemap.xsl
+     * Robots text file with link to sitemap index
+     *
+     * @param  mixed $doc_key
+     * @return Response
+     */
+    #[Route(
+        '/sitemap.xsl',
+        name: 'ali_sitemaps_sitemap_xsl'
+    )]
+    public function sitemapXsl(Request $request): Response
+    {
+        $template = "@AliSitemap/sitemap_xsl.html.twig";
+        // return response in XML format
+        $response = new Response(
+            $this->renderView($template, []),
+            200
+        );
+        $response->headers->set('Content-Type', 'application/xml');
+        return $response;
+
+    }
+
+
+    /**
      * robots.txt
      * Robots text file with link to sitemap index
      *
@@ -66,11 +91,15 @@ class SitemapController extends AbstractController
         $sitemaps = $this->sitemapService->getSitemaps();
         $template = "@AliSitemap/index.html.twig";
 
+        // test if ?userview=1 in url
+        $userview = $request->query->has('userview') && $request->query->get('userview') === '1';
+
         // return response in XML format
         $response = new Response(
             $this->renderView($template, [
                 'hostname' => $hostname,
                 'sitemaps' => $sitemaps,
+                'userview' => $userview
             ]),
             200
         );
@@ -100,11 +129,15 @@ class SitemapController extends AbstractController
 
         $template = "@AliSitemap/sitemap.html.twig";
 
+        // test if ?userview=1 in url
+        $userview = $request->query->has('userview') && $request->query->get('userview') === '1';
+
         // return response in XML format
         $response = new Response(
-            $this->renderView('@AliSitemap/sitemap.html.twig', array(
+            $this->renderView($template, array(
                 'nodes' => $nodes,
-                'hostname' => $hostname
+                'hostname' => $hostname,
+                'userview' => $userview
             )),
             200
         );

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+{% if userview | default %}<?xml-stylesheet type="text/xsl" href="{{ path('ali_sitemaps_sitemap_xsl') }}"?>{% endif %}
   <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       {% for sitemap in sitemaps %}
         {% if sitemap.loc %}
         <sitemap>{# check if hostname is not alreay in url#}
-            <loc>{% if sitemap.loc|replace({hostname:''}) == sitemap.loc %}{{hostname}}{{sitemap.loc}}{%else%}{{sitemap.loc}}{% endif %}</loc>
+            <loc>{% if sitemap.loc|replace({hostname:''}) == sitemap.loc %}{{hostname}}{{sitemap.loc}}{%else%}{{sitemap.loc}}{% endif %}{% if userview | default %}?userview=1{% endif %}
+            </loc>
         </sitemap>
         {% endif %}
     {% endfor %}
